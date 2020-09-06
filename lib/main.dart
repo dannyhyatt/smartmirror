@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:smartmirror/ActiveInactiveView.dart';
 import 'package:smartmirror/generative_clock.dart';
 import 'package:smartmirror/views/default_clock.dart';
 import 'package:smartmirror/views/dots_clock_view.dart';
@@ -13,23 +14,10 @@ import 'package:smartmirror/views/stocks_view.dart';
 import 'package:smartmirror/views/text_view.dart';
 import 'package:smartmirror/views/weather_view.dart';
 
-Map<String, dynamic> config = Map();
+Map<String, dynamic> activeLayout = Map();
+Map<String, dynamic> inactiveLayout = Map();
 
 void main() {
-  config = {
-    "comment" : "look at https://github.com/dannyhyatt/smartmirror to see all widgets",
-    "layout" : {
-      "type" : "rows",
-      "rows" : [
-        [  // row 1
-          {
-//              "name" : "default_clock",
-          }
-        ]
-      ]
-    }
-  };
-  debugPrint('wtfff');
   runApp(MyApp());
 }
 
@@ -73,7 +61,7 @@ class LoadingScreen extends StatelessWidget {
         ]
       }
     };
-    config = defaultConfig;
+    activeLayout = defaultConfig;
     Navigator.pushReplacement(ctx, MaterialPageRoute(builder: (_) => MyHomePage(title: "Flutter Home Page")));
   }
 
@@ -116,7 +104,51 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    config = {
+    activeLayout = {
+      "comment" : "look at https://github.com/dannyhyatt/smartmirror to see all widgets",
+      "layout" : {
+        "type" : "rows",
+        "rows" : [
+          [  // row 1
+            {
+              "name" : "default_clock",
+            },
+            {
+              "name" : "spacer",
+            },
+            {
+              "name" : "weather_view",
+            }
+          ],
+
+          [  // row 2
+            {
+              "name" : "spacer",
+            },
+            {
+              "name" : "spacer",
+            },
+            {
+              "name" : "spacer",
+            }
+          ],
+
+          [
+            {
+              "name" : "news_view",
+            },
+            {
+              "name" : "spacer",
+            },
+            {
+              "name" : "stocks_view"
+            }
+          ]
+        ]
+      }
+    };
+
+    inactiveLayout = {
       "comment" : "look at https://github.com/dannyhyatt/smartmirror to see all widgets",
       "layout" : {
         "type" : "rows",
@@ -154,6 +186,14 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     };
 
+    return ActiveInactiveView(
+      seconds: 60,
+      active: _getLayoutFromMap(activeLayout),
+      inactive: _getLayoutFromMap(inactiveLayout),
+    );
+  }
+
+  Widget _getLayoutFromMap(Map config) {
     // rows will be the default layout type
     if(config['layout']['type'] == null || config['layout']['type'] == 'rows') {
 
@@ -202,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minHeight: 250,
               minWidth: 350,
             ),
-            color: Colors.red,
+            color: Colors.black,
             child: GenerativeClockView()
         ),
       );
