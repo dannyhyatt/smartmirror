@@ -30,10 +30,7 @@
 .pub-cache/
 .pub/
 /build/
-<<<<<<< HEAD
 !/build/web/
-=======
->>>>>>> parent of 1651b96... added web build
 
 # Web related
 lib/generated_plugin_registrant.dart
